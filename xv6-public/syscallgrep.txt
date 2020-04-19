@@ -1,0 +1,98 @@
+defs.h:// syscall.c
+defs.h:void            syscall(void);
+initcode.S:#include "syscall.h"
+initcode.S:  int $T_SYSCALL
+initcode.S:  int $T_SYSCALL
+Makefile:	syscall.o\
+proc.h:  struct trapframe *tf;        // Trap frame for current syscall
+runoff.list:syscall.h
+runoff.list:syscall.c
+runoff.spec:# syscall.h either
+runoff.spec:# syscall.c either
+syscall.c:#include "syscall.h"
+syscall.c:// User code makes a system call with INT T_SYSCALL.
+syscall.c:static int (*syscalls[])(void) = {
+syscall.c:syscall(void)
+syscall.c:  if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
+syscall.c:    curproc->tf->eax = syscalls[num]();
+syscall.txt:defs.h:// syscall.c
+syscall.txt:defs.h:void            syscall(void);
+syscall.txt:initcode.S:#include "syscall.h"
+syscall.txt:initcode.S:  int $T_SYSCALL
+syscall.txt:initcode.S:  int $T_SYSCALL
+syscall.txt:Makefile:	syscall.o\
+syscall.txt:proc.h:  struct trapframe *tf;        // Trap frame for current syscall
+syscall.txt:runoff.list:syscall.h
+syscall.txt:runoff.list:syscall.c
+syscall.txt:runoff.spec:# syscall.h either
+syscall.txt:runoff.spec:# syscall.c either
+syscall.txt:syscall.c:#include "syscall.h"
+syscall.txt:syscall.c:// User code makes a system call with INT T_SYSCALL.
+syscall.txt:syscall.c:static int (*syscalls[])(void) = {
+syscall.txt:syscall.c:syscall(void)
+syscall.txt:syscall.c:  if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
+syscall.txt:syscall.c:    curproc->tf->eax = syscalls[num]();
+syscall.txt:trap.c:  SETGATE(idt[T_SYSCALL], 1, SEG_KCODE<<3, vectors[T_SYSCALL], DPL_USER);
+syscall.txt:trap.c:  if(tf->trapno == T_SYSCALL){
+syscall.txt:trap.c:    syscall();
+syscall.txt:traps.h:#define T_SYSCALL       64      // system call
+syscall.txt:usertests.c:#include "syscall.h"
+syscall.txt:usertests.c:      "a" (SYS_sleep), "n" (T_SYSCALL), "c" (p) :
+syscall.txt:usys.S:#include "syscall.h"
+syscall.txt:usys.S:#define SYSCALL(name) \
+syscall.txt:usys.S:    int $T_SYSCALL; \
+syscall.txt:usys.S:SYSCALL(fork)
+syscall.txt:usys.S:SYSCALL(exit)
+syscall.txt:usys.S:SYSCALL(wait)
+syscall.txt:usys.S:SYSCALL(pipe)
+syscall.txt:usys.S:SYSCALL(read)
+syscall.txt:usys.S:SYSCALL(write)
+syscall.txt:usys.S:SYSCALL(close)
+syscall.txt:usys.S:SYSCALL(kill)
+syscall.txt:usys.S:SYSCALL(exec)
+syscall.txt:usys.S:SYSCALL(open)
+syscall.txt:usys.S:SYSCALL(mknod)
+syscall.txt:usys.S:SYSCALL(unlink)
+syscall.txt:usys.S:SYSCALL(fstat)
+syscall.txt:usys.S:SYSCALL(link)
+syscall.txt:usys.S:SYSCALL(mkdir)
+syscall.txt:usys.S:SYSCALL(chdir)
+syscall.txt:usys.S:SYSCALL(dup)
+syscall.txt:usys.S:SYSCALL(getpid)
+syscall.txt:usys.S:SYSCALL(sbrk)
+syscall.txt:usys.S:SYSCALL(sleep)
+syscall.txt:usys.S:SYSCALL(uptime)
+syscall.txt:usys.S:SYSCALL(shutdown)
+syscall.txt:usys.S:SYSCALL(reboot)
+trap.c:  SETGATE(idt[T_SYSCALL], 1, SEG_KCODE<<3, vectors[T_SYSCALL], DPL_USER);
+trap.c:  if(tf->trapno == T_SYSCALL){
+trap.c:    syscall();
+traps.h:#define T_SYSCALL       64      // system call
+usertests.c:#include "syscall.h"
+usertests.c:      "a" (SYS_sleep), "n" (T_SYSCALL), "c" (p) :
+usys.S:#include "syscall.h"
+usys.S:#define SYSCALL(name) \
+usys.S:    int $T_SYSCALL; \
+usys.S:SYSCALL(fork)
+usys.S:SYSCALL(exit)
+usys.S:SYSCALL(wait)
+usys.S:SYSCALL(pipe)
+usys.S:SYSCALL(read)
+usys.S:SYSCALL(write)
+usys.S:SYSCALL(close)
+usys.S:SYSCALL(kill)
+usys.S:SYSCALL(exec)
+usys.S:SYSCALL(open)
+usys.S:SYSCALL(mknod)
+usys.S:SYSCALL(unlink)
+usys.S:SYSCALL(fstat)
+usys.S:SYSCALL(link)
+usys.S:SYSCALL(mkdir)
+usys.S:SYSCALL(chdir)
+usys.S:SYSCALL(dup)
+usys.S:SYSCALL(getpid)
+usys.S:SYSCALL(sbrk)
+usys.S:SYSCALL(sleep)
+usys.S:SYSCALL(uptime)
+usys.S:SYSCALL(shutdown)
+usys.S:SYSCALL(reboot)
