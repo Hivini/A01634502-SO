@@ -6,17 +6,17 @@
 #include <sys/wait.h>
 
 int main() {
-    int shmId = shmget(400, 100, 0644 | IPC_CREAT);
+    int shmId = shmget(200, 100, 0644 | IPC_CREAT);
     int childs[5];
     for (int i = 0; i < 5; i++) {
         int pid = fork();
         childs[i] = pid;
         if (pid != 0) {
-            shmId = shmget(400, 100, 0644);
-            char *var = (char *)shmat(shmId, NULL, 0);
-            var = &var[i * 10];
+            shmId = shmget(200, 100, 0644);
+            int *nums = (int *)shmat(shmId, NULL, 0);
+            nums = &nums[i * 10];
             for (int j = 0; j < 10; j++) {
-                var[j] = i + '0';
+                nums[j] = i;
             }
             return 0;
         }
@@ -24,7 +24,11 @@ int main() {
     for (int i = 0; i < 5; i++) {
         waitpid(childs[i], 0, 0);
     }
-    char *var = (char *) shmat(shmId, NULL, 0);
-    printf("Contenido de var %s\n", var);
+    int *nums = (int *) shmat(shmId, NULL, 0);
+    for (int i = 0; i < 50; i++) {
+        printf("%d", *nums);
+        nums++;
+    }
+    printf("\n");
     return 0;
 }
