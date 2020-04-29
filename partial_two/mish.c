@@ -10,19 +10,22 @@
 #define MAX_LINE 80
 #define MAX_NUM_ARGS 10
  
-size_t string_parser(const char *input, char *word_array[]) {
-  size_t n = 0;
-  while (*input) {
-    while (isspace((unsigned char)*input))
-      ++input;
-    if (*input) {
-      word_array[n++] = (char *)input;
-      while (*input && !isspace((unsigned char)*input))
+
+size_t string_parser(char *input, char *word_array[]) {
+    size_t n = 0;
+    while (*input) {
+        while (isspace((unsigned char)*input))
         ++input;
+        if (*input) {
+        word_array[n++] = (char *)input;
+        while (*input && !isspace((unsigned char)*input))
+        ++input;
+        *(input) = '\0';
+        ++input;
+        }
     }
-  }
- 
-  return n;
+    word_array[n] = NULL;
+    return n;
 }
  
 int main(void) {
@@ -39,37 +42,6 @@ int main(void) {
     // Separamos la línea en palabras separadas por espacio
     // y las guardamos en args
     i = string_parser(line,args); // i contiene el número de argumentos
-
-    char ex[] = "exit";
-    // (6) Cuando se teclee exit deberá terminar
-    if (strcmp(args[0], ex) == 0) {
-        should_run = 0;
-    } else {
-        // (1) Crear un proceso hijo
-        int pid = fork();
-        if (pid == 0) {
-            // (2) El hijo debe ejecutar execvp para ejecutar al comando tecleado
-            //             char *callArg[i + 1];
-            // for (int y = 0; y < i; y++) {
-            //     callArg[y] = args[y + 1];
-            // }
-            // callArg[i] = NULL;
-            // printf("%s", callArg[0]);
-            if (i > 1) {
-                args[i + 1] = NULL;
-            }
-            int valid = execvp(args[0], args);
-            // (3) Si el programa no existe debe imprimir programa no encontrado
-            printf("Programa no encontrado\n");
-            exit(0);
-        } else {
-            wait(NULL);
-            /*
-            pid_t wpid;
-            while ((wpid = wait(&status)) > 0);
-            */
-        }
-    }
     
     /**
     (1) Crear un proceso hijo
@@ -79,7 +51,30 @@ int main(void) {
     (5) Debe ejecutar comandos como ls -l /etc o ps -fea
     (6) Cuando se teclee exit deberá terminar
     **/
-    printf("%d, %s %s\n", i, args[0],line); // Es solo para pruebas borrar cuando esté listo
+    
+    char ex[] = "exit";
+    // (6) Cuando se teclee exit deberá terminar
+    if (strcmp(args[0], ex) == 0) {
+        should_run = 0;
+        printf("Thank you for using my sh.\n");
+    } else {
+        // (1) Crear un proceso hijo
+        int pid = fork();
+        if (pid == 0) {
+            if (i > 1) {
+                args[i + 1] = NULL;
+            }
+            // (2) El hijo debe ejecutar execvp para ejecutar al comando tecleado
+            // (5) Debe ejecutar comandos como ls -l /etc o ps -fea
+            int valid = execvp(args[0], args);
+            // (3) Si el programa no existe debe imprimir programa no encontrado
+            printf("Programa no encontrado\n");
+            exit(0);
+        } else {
+            // (4) El proceso padre debe esperar a que el hijo termine, checar funcion wait
+            wait(NULL);
+        }
+    }
     fflush(stdout);
     fflush(stdin);
     line[0] = '\0';
