@@ -51,24 +51,31 @@ int main(void) {
     (5) Debe ejecutar comandos como ls -l /etc o ps -fea
     (6) Cuando se teclee exit deberá terminar
     **/
-    
+
+    // Create the variable that is going to be exit.
     char ex[] = "exit";
     // (6) Cuando se teclee exit deberá terminar
+    // Compare the initial user argument vs the exit string, if they are equal the function will return 0.
     if (strcmp(args[0], ex) == 0) {
+        // Get out of the loop.
         should_run = 0;
         printf("Thank you for using my sh.\n");
     } else {
         // (1) Crear un proceso hijo
+        // Get the pid.
         int pid = fork();
         if (pid == 0) {
+            // The family of functions exec needs a final argument as null.
             if (i > 1) {
                 args[i + 1] = NULL;
             }
             // (2) El hijo debe ejecutar execvp para ejecutar al comando tecleado
             // (5) Debe ejecutar comandos como ls -l /etc o ps -fea
+            // execvp return a value then there is an error, i.e. the program wasn't found.
             int valid = execvp(args[0], args);
             // (3) Si el programa no existe debe imprimir programa no encontrado
             printf("Programa no encontrado\n");
+            // Exit the child process.
             exit(0);
         } else {
             // (4) El proceso padre debe esperar a que el hijo termine, checar funcion wait
