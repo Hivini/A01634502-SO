@@ -10,15 +10,15 @@ int cnt = 0;
 
 void * Count(void * a)
 {
-    sem_wait(&sem_test);
     int i, tmp;
     for(i = 0; i < NITER; i++)
     {
+        sem_wait(&sem_test);
         tmp = cnt;      /* copy the global cnt locally */
         tmp = tmp+1;    /* increment the local copy */
-        cnt = tmp;      /* store the local value into the global cnt */ 
+        cnt = tmp;      /* store the local value into the global cnt */
+        sem_post(&sem_test);
     }
-    sem_post(&sem_test);
 }
 
 int main(int argc, char * argv[])
