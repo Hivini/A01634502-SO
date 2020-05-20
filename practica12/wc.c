@@ -22,14 +22,14 @@ int main(int arg, char **argv) {
         if (buffer == '\n') {
             lineCount++;
         }
-        if ((buffer == ' ' || buffer == '\n' || buffer == EOF) && whitespace == 0) {
+        if ((buffer == ' ' || buffer == '\n') && whitespace == 0) {
             whitespace = 1;
             wordCount++;
-        } else if (buffer != ' ' && buffer != '\n' && buffer != EOF) {
+        } else if (buffer != ' ' && buffer != '\n') {
             whitespace = 0;
         }
     }
-    
+    if (whitespace == 0) wordCount++;
     close(fd);
     printf("Line Count: %d\tWord Count: %d\tcharCount: %d\tFile: %s\n", lineCount, wordCount, charCount, fileName);
     exit(0);
