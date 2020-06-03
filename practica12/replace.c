@@ -27,7 +27,7 @@ int main(int arg, char **argv) {
     char whitespace;
 
     int fd = open(fileName, O_RDONLY);
-    int tmp = open(tmpFilename, O_WRONLY | O_CREAT, 0600);
+    int tmp = open(tmpFilename, O_WRONLY | O_CREAT, 7777);
     if (fd < 0) {
         printf("The file cannot be opened\n");
         exit(1);
@@ -56,8 +56,10 @@ int main(int arg, char **argv) {
     word[i] = '\0';
     writeToFile(tmp, word, searchWord, replaceWord);
     close(fd);
+    char *pathToTmp = "/tmp/";
+    strcat(pathToTmp, fileName);
     unlink(fileName);
-    link(tmpFilename, "/tmp/file.txt");
+    link(tmpFilename, "./jaja.txt");
     unlink(tmpFilename);
     exit(0);
 }
